@@ -1,0 +1,40 @@
+.circular-buttons {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 180% , #00147F, #ffffff);
+    -fx-background-radius: 100;
+}
+.circular-buttons:hover {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 80% , #00147F, #ffffff);
+}
+.circular-buttons:pressed {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 200% , #000B42, #ffffff);
+}
+
+.background-btns {
+    -fx-background-radius: 100;
+    -fx-background-color: #171923;
+}
+
+#arrow-back {
+    -fx-background-image: url("img/arrow_back.png");
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 50% 50%;
+}
+
+#arrow-forward {
+    -fx-background-image: url("img/arrow_forward.png");
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 50% 50%;
+}
+
+#btn-play {
+    -fx-background-image: url("img/play.png");
+    -fx-background-position: 60%, center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60% 60%;
+}
+
+.nav-bar {
+    -fx-background-color: linear-gradient(#2f3038 0%, #171923 80%);
+}
