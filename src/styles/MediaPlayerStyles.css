@@ -41,6 +41,11 @@
     -fx-background-repeat: no-repeat;
     -fx-background-size: 60% 60%;
 }
+#btn-play:selected {
+    -fx-background-image: url("img/pause.png");
+    -fx-background-position: center;
+    -fx-background-size: 37% 46%;
+}
 
 #btn-next-song {
     -fx-background-image: url("img/next_song.png");
@@ -132,14 +137,26 @@
     -fx-background-color: linear-gradient(#2f3038 0%, #171923 80%);
 }
 
-.progress-bar .thumb {
-    -fx-background-color: radial-gradient(center 50% 50% , radius 220% , #3041d7, #ffffff);
-}
-.progress-bar .track {
+.progress-fill .track {
+    -fx-background-radius: 10;
     -fx-background-color: linear-gradient(#3E454F 5%, #3A3B45 80%);
 }
-#volume-bar .track {
-    -fx-background-color: linear-gradient(#3b3d4b 0%, #2c2d3a 80%);
+.progress-fill .bar {
+    -fx-background-color: linear-gradient(#8e8dd4 0%, #3634e6 80%);
+    -fx-background-insets:0;
+}
+
+.progress-slider .thumb {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 220% , #3041d7, #ffffff);
+}
+.progress-slider .track {
+    -fx-background-color: transparent;
+}
+.progress-slider .thumb:hover {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 120% , #3041d7, #ffffff);
+}
+.progress-slider .thumb:pressed {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 200% , #3635aa, #ffffff);
 }
 
 .album-art {
