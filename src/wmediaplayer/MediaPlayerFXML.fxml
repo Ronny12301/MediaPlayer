@@ -5,14 +5,17 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="655.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <HBox alignment="CENTER_LEFT" styleClass="nav-bar" stylesheets="@../styles/MediaPlayerStyles.css" BorderPane.alignment="CENTER">
          <children>
@@ -37,7 +40,7 @@
       </HBox>
    </top>
    <center>
-      <SplitPane dividerPositions="0.7500308442188696" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.7891063335456904" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
          <items>
             <HBox alignment="CENTER" minWidth="300.0" prefHeight="377.0" prefWidth="730.0" styleClass="album-art" stylesheets="@../styles/MediaPlayerStyles.css" SplitPane.resizableWithParent="false" />
             <SplitPane dividerPositions="0.2595243100766782" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="split-pane-divider" stylesheets="@../styles/MediaPlayerStyles.css" SplitPane.resizableWithParent="false">
@@ -56,30 +59,56 @@
       </SplitPane>
    </center>
    <bottom>
-      <VBox minHeight="-Infinity" prefHeight="78.0" styleClass="nav-bar" stylesheets="@../styles/MediaPlayerStyles.css" BorderPane.alignment="CENTER">
+      <VBox minHeight="-Infinity" prefHeight="80.0" styleClass="nav-bar" stylesheets="@../styles/MediaPlayerStyles.css" BorderPane.alignment="CENTER">
          <children>
-            <Slider blockIncrement="1.0" prefHeight="0.0" prefWidth="655.0" />
+            <Slider blockIncrement="1.0" prefHeight="0.0" prefWidth="655.0" styleClass="progress-bar">
+               <VBox.margin>
+                  <Insets bottom="2.0" />
+               </VBox.margin></Slider>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <AnchorPane prefHeight="64.0" prefWidth="360.0">
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00/00:00">
+                     <HBox.margin>
+                        <Insets left="9.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Text>
+                  <Region prefHeight="64.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane prefHeight="64.0" prefWidth="449.0">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                      <children>
-                        <AnchorPane layoutX="82.0" layoutY="17.0">
+                        <AnchorPane layoutX="4.0" layoutY="13.0" prefHeight="38.0" prefWidth="456.0" styleClass="background-btns">
                            <children>
-                              <Button id="btn-next-song" layoutX="113.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="81.0" styleClass="btn-change-track" />
-                              <Button id="btn-previous-song" layoutX="1.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="81.0" styleClass="btn-change-track" />
+                              <AnchorPane layoutX="124.0" layoutY="3.0000009536743164">
+                                 <children>
+                                    <Button id="btn-next-song" layoutX="113.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="81.0" styleClass="btn-change-track" />
+                                    <Button id="btn-previous-song" layoutX="1.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="81.0" styleClass="btn-change-track" />
+                                 </children>
+                              </AnchorPane>
+                              <Button id="btn-stop" layoutX="93.0" layoutY="10.000000953674316" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" stylesheets="@../styles/MediaPlayerStyles.css" />
+                              <ToggleButton id="btn-volume" layoutX="334.0" layoutY="1.0000009536743164" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" styleClass="trasnparent-buttons" stylesheets="@../styles/MediaPlayerStyles.css" />
+                              <ToggleButton id="btn-repeat" layoutX="44.0" layoutY="9.5367431640625E-7" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" styleClass="trasnparent-buttons" stylesheets="@../styles/MediaPlayerStyles.css" />
+                              <ToggleButton id="btn-random" layoutX="6.0" layoutY="-0.03840923309326172" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" rotate="270.0" styleClass="trasnparent-buttons" stylesheets="@../styles/MediaPlayerStyles.css" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="413.55187025576924" />
+                              <Slider id="volume-bar" blockIncrement="1.0" layoutX="378.0" layoutY="11.000000953674316" maxHeight="-Infinity" prefHeight="9.0" prefWidth="70.0" styleClass="progress-bar" value="100.0" />
                            </children>
                         </AnchorPane>
-                        <VBox alignment="CENTER" layoutX="149.0" layoutY="-1.0" prefHeight="61.0" prefWidth="61.0" styleClass="background-btns">
+                        <VBox alignment="CENTER" layoutX="195.0" layoutY="-2.0" prefHeight="61.0" prefWidth="61.0" styleClass="background-btns">
                            <children>
                               <Button id="btn-play" mnemonicParsing="false" prefHeight="55.0" prefWidth="55.0" styleClass="circular-buttons" stylesheets="@../styles/MediaPlayerStyles.css" />
                            </children>
                         </VBox>
-                        <Button id="btn-stop" layoutX="51.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" stylesheets="@../styles/MediaPlayerStyles.css" />
                      </children>
                   </AnchorPane>
+                  <Region prefHeight="64.0" prefWidth="79.0" HBox.hgrow="ALWAYS" />
+                  <Button id="btn-full-screen" alignment="TOP_RIGHT" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="trasnparent-buttons">
+                     <HBox.margin>
+                        <Insets bottom="39.0" right="1.0" />
+                     </HBox.margin>
+                  </Button>
                </children></HBox>
          </children>
       </VBox>

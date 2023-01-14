@@ -1,5 +1,5 @@
 .circular-buttons {
-    -fx-background-color: radial-gradient(center 50% 50% , radius 180% , #00147F, #ffffff);
+    -fx-background-color: radial-gradient(center 50% 50% , radius 190% , #00147F, #ffffff);
     -fx-background-radius: 100;
 }
 .circular-buttons:hover {
@@ -77,10 +77,70 @@
     -fx-background-color: linear-gradient(#3b3d4b 0%, #191A21 80%);
 }
 
+.trasnparent-buttons {
+    -fx-background-color: transparent;
+    -fx-background-radius: 100;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 80% 80%;
+}
+
+#btn-volume {
+    -fx-background-image: url("img/volume.png");
+}
+#btn-volume:hover {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 35% , #9b9b9b, #171923);
+}
+#btn-volume:selected {
+    -fx-background-image: url("img/volume_mute.png");
+    -fx-background-color: radial-gradient(center 50% 50% , radius 35% , #7f7f82, #171923);
+}
+
+
+#btn-repeat {
+    -fx-background-image: url("img/repeat.png");
+}
+#btn-repeat:hover {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 35% , #9b9b9b, #171923);
+}
+#btn-repeat:selected {
+    -fx-background-image: url("img/repeat_one.png");
+    -fx-background-color: radial-gradient(center 50% 50% , radius 35% , #7f7f82, #171923);
+}
+
+
+#btn-random {
+    -fx-background-image: url("img/random.png");
+    -fx-background-size: 80% 65%;
+}
+#btn-random:hover {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 35% , #9b9b9b, #171923);
+}
+#btn-random:selected {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 35% , #7f7f82, #171923);
+}
+
+#btn-full-screen {
+    -fx-background-image: url("img/full_screen.png");
+}
+#btn-full-screen:hover {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 35% , #9b9b9b, #171923);
+}
+
+
 .nav-bar {
     -fx-background-color: linear-gradient(#2f3038 0%, #171923 80%);
 }
 
+.progress-bar .thumb {
+    -fx-background-color: radial-gradient(center 50% 50% , radius 220% , #3041d7, #ffffff);
+}
+.progress-bar .track {
+    -fx-background-color: linear-gradient(#3E454F 5%, #3A3B45 80%);
+}
+#volume-bar .track {
+    -fx-background-color: linear-gradient(#3b3d4b 0%, #2c2d3a 80%);
+}
 
 .album-art {
     -fx-background-image: url("img/Media-Player-icon.png");
