@@ -3,7 +3,7 @@
     -fx-background-radius: 100;
 }
 .circular-buttons:hover {
-    -fx-background-color: radial-gradient(center 50% 50% , radius 80% , #00147F, #ffffff);
+    -fx-background-color: radial-gradient(center 50% 50% , radius 110% , #00147F, #ffffff);
 }
 .circular-buttons:pressed {
     -fx-background-color: radial-gradient(center 50% 50% , radius 200% , #000B42, #ffffff);
@@ -12,6 +12,13 @@
 .background-btns {
     -fx-background-radius: 100;
     -fx-background-color: #171923;
+}
+
+.split-pane-divider {
+    -fx-background-color: white;
+    -fx-border-color: white;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
 }
 
 #arrow-back {
@@ -35,6 +42,50 @@
     -fx-background-size: 60% 60%;
 }
 
+#btn-next-song {
+    -fx-background-image: url("img/next_song.png");
+    -fx-background-position: 60%, center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 35% 55%;
+}
+#btn-previous-song {
+    -fx-background-image: url("img/previous_song.png");
+    -fx-background-position: 40%, center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 35% 55%;
+}
+
+#btn-stop {
+    -fx-background-color: #E1E1E1;
+}
+#btn-stop:hover {
+    -fx-background-color: white;
+}
+
+#btn-stop:pressed {
+    -fx-background-color: #CCCCE6;
+}
+
+.btn-change-track {
+    -fx-background-color: linear-gradient(#3b3d4b 0%, #2c2d3a 80%);
+    -fx-background-radius: 15;
+}
+.btn-change-track:hover {
+    -fx-background-color: linear-gradient(#5A5B63 0%, #2c2d3a 100%);
+}
+.btn-change-track:pressed {
+    -fx-background-color: linear-gradient(#3b3d4b 0%, #191A21 80%);
+}
+
 .nav-bar {
     -fx-background-color: linear-gradient(#2f3038 0%, #171923 80%);
+}
+
+
+.album-art {
+    -fx-background-image: url("img/Media-Player-icon.png");
+    -fx-background-position: center;
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    
 }
