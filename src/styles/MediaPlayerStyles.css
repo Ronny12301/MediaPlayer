@@ -166,3 +166,22 @@
     -fx-background-repeat: no-repeat;
     
 }
+
+
+.nav-buttons {
+    -fx-background-color: transparent;
+    -fx-font-size: 14 rem;
+    -fx-border-radius: 5 5 0 0;
+}
+.nav-buttons:hover {
+    -fx-background-color: #4F516348;
+}
+.nav-buttons:selected {
+    -fx-background-color: linear-gradient(#8e8dd420 0%, #405bee90 50%, #3A8DD420 100%);
+    -fx-border-color: black;
+}
+
+.nav-buttons:pressed {
+    -fx-background-color: linear-gradient(#8e8dd420 0%, #405bee60 50%, #3A8DD420 100%);
+    -fx-border-color: black;
+}
