@@ -16,14 +16,20 @@ public class WMediaPlayer extends Application {
     /**
      * @param args the command line arguments
      */
+    
+    private static Stage stage;
+    
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("MediaPlayerFXML.fxml"));
+        stage = primaryStage;
+        
         stage.setTitle("Media Player 11");
+
         Scene scene = new Scene(root);
         
         Image icon = new Image("styles/img/Media-Player-icon.png");
@@ -31,6 +37,10 @@ public class WMediaPlayer extends Application {
         
         stage.setScene(scene);
         stage.show();
+    }
+    
+    public static Stage getStage() {
+        return stage;
     }
     
 }

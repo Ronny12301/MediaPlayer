@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -60,7 +61,7 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="8000.0" styleClass="nav-buttons" text="Set Root Folder" textFill="WHITE">
+                  <Button mnemonicParsing="false" onAction="#setRootFolderButtonClicked" prefHeight="42.0" prefWidth="8000.0" styleClass="nav-buttons" text="Set Root Folder" textFill="WHITE">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>
@@ -74,16 +75,21 @@
    <center>
       <SplitPane dividerPositions="0.7891063335456904" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
          <items>
-            <VBox fx:id="screenBackground" alignment="CENTER" fillWidth="false" minHeight="0.0" SplitPane.resizableWithParent="false">
+            <VBox fx:id="screenBackground" alignment="CENTER" fillWidth="false" minHeight="0.0">
                <children>
-                  <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" rotate="90.0">
-                     <viewport>
-                        <Rectangle2D />
-                     </viewport>
+                  <StackPane>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
-                  </MediaView>
+                     <children>
+                        <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" rotate="90.0">
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </MediaView>
+                        <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
                </children>
             </VBox>
             <SplitPane dividerPositions="0.2595243100766782" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="split-pane-divider" stylesheets="@../styles/MediaPlayerStyles.css" SplitPane.resizableWithParent="false">
@@ -91,15 +97,18 @@
                   <VBox alignment="BOTTOM_CENTER" minWidth="0.0" style="-fx-background-color: white;" SplitPane.resizableWithParent="false">
                      <children>
                         <HBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="407.0" prefWidth="161.0" styleClass="album-art" stylesheets="@../styles/MediaPlayerStyles.css" />
-                        <Text boundsType="VISUAL" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15 rem;" text="Song Name" textAlignment="CENTER" VBox.vgrow="NEVER">
+                        <Text fx:id="fileNameText" boundsType="VISUAL" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 14 rem;" text="Song Name" textAlignment="CENTER" VBox.vgrow="NEVER">
                            <font>
                               <Font size="15.0" />
                            </font>
+                           <VBox.margin>
+                              <Insets bottom="2.0" />
+                           </VBox.margin>
                         </Text>
                         <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="2.0" prefWidth="161.0" style="-fx-background-color: #E1E1E1;" VBox.vgrow="NEVER" />
                      </children>
                   </VBox>
-                  <ListView minWidth="0.0" SplitPane.resizableWithParent="false" />
+                  <ListView fx:id="playList" minWidth="0.0" SplitPane.resizableWithParent="false" />
               </items>
             </SplitPane>
          </items>
@@ -166,7 +175,7 @@
                         </AnchorPane>
                         <VBox alignment="CENTER" layoutX="195.0" layoutY="-2.0" prefHeight="61.0" prefWidth="61.0" styleClass="background-btns">
                            <children>
-                              <ToggleButton id="btn-play" disable="true" mnemonicParsing="false" prefHeight="55.0" prefWidth="55.0" styleClass="circular-buttons" />
+                              <ToggleButton id="btn-play" fx:id="playButton" disable="true" mnemonicParsing="false" onAction="#playButtonClicked" prefHeight="55.0" prefWidth="55.0" styleClass="circular-buttons" />
                            </children>
                         </VBox>
                      </children>
