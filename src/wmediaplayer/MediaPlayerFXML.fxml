@@ -155,17 +155,40 @@
                   </Slider>
                </children>
             </StackPane>
-            <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="50.0" prefWidth="200.0">
                <children>
-                  <Text fx:id="timeText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00/00:00">
-                     <HBox.margin>
-                        <Insets bottom="40.0" left="9.0" />
-                     </HBox.margin>
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Text>
-                  <Region prefHeight="64.0" prefWidth="6.0" HBox.hgrow="ALWAYS" />
+                  <StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox prefWidth="115.0">
+                           <children>
+                              <Text fx:id="timeText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="19.0" />
+                                 </HBox.margin>
+                              </Text>
+                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="/">
+                                 <HBox.margin>
+                                    <Insets left="3.0" right="3.0" top="17.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="totalTimeText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="- -:- -">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="19.0" />
+                                 </HBox.margin>
+                              </Text>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
                   <AnchorPane prefHeight="64.0" prefWidth="449.0">
                      <HBox.margin>
                         <Insets left="5.0" />
@@ -179,7 +202,7 @@
                                     <Button id="btn-previous-song" fx:id="previousButton" disable="true" layoutX="1.0" mnemonicParsing="false" onAction="#previousButtonClicked" prefHeight="30.0" prefWidth="81.0" styleClass="btn-change-track" />
                                  </children>
                               </AnchorPane>
-                              <Button id="btn-stop" layoutX="93.0" layoutY="10.000000953674316" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" stylesheets="@../styles/MediaPlayerStyles.css" />
+                              <Button id="btn-stop" layoutX="93.0" layoutY="10.000000953674316" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopButtonClicked" prefHeight="15.0" prefWidth="15.0" stylesheets="@../styles/MediaPlayerStyles.css" />
                               <ToggleButton id="btn-volume" fx:id="volumeButton" disable="true" layoutX="334.0" layoutY="1.0000009536743164" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#volumeButtonClicked" prefHeight="35.0" prefWidth="35.0" styleClass="trasnparent-buttons" stylesheets="@../styles/MediaPlayerStyles.css" />
                               <ToggleButton id="btn-repeat" layoutX="44.0" layoutY="9.5367431640625E-7" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" styleClass="trasnparent-buttons" stylesheets="@../styles/MediaPlayerStyles.css" />
                               <ToggleButton id="btn-random" layoutX="6.0" layoutY="-0.03840923309326172" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" rotate="270.0" styleClass="trasnparent-buttons" stylesheets="@../styles/MediaPlayerStyles.css" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="413.55187025576924" />
@@ -201,7 +224,7 @@
                   <Region prefHeight="64.0" prefWidth="79.0" HBox.hgrow="ALWAYS" />
                   <Button id="btn-full-screen" alignment="TOP_RIGHT" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="trasnparent-buttons">
                      <HBox.margin>
-                        <Insets bottom="78.0" right="1.0" />
+                        <Insets bottom="30.0" right="6.0" />
                      </HBox.margin>
                   </Button>
                </children>

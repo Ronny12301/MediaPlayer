@@ -58,7 +58,6 @@ public class MediaPlayerFXMLController implements Initializable {
     
     @FXML
     private Slider progressSlider;
-    
     @FXML
     private ProgressBar progressBar;
     
@@ -71,6 +70,8 @@ public class MediaPlayerFXMLController implements Initializable {
     
     @FXML
     private Text timeText;
+    @FXML
+    private Text totalTimeText;
     
     @FXML
     private MediaView mediaView;
@@ -139,27 +140,8 @@ public class MediaPlayerFXMLController implements Initializable {
     
     
     public void nextButtonClicked(ActionEvent e) {
-        if (previousButton.isDisable()) {
-            previousButton.setDisable(false);
-        }
         
-        // verify if its the last song
-        if (fileNumber>=filesPlayList.size()-2) {
-            nextButton.setDisable(true);
-        } else {
-            nextButton.setDisable(false);
-        }
-        if (fileNumber > filesPlayList.size() - 2) {
-            return;
-        }
-        
-        int oldValue = fileNumber;
-        playList.requestFocus();
-        fileNumber++;
-        initiateMediaPlayer(filesPlayList.keySet().toArray()[fileNumber].toString());
-        playList.getSelectionModel().select(fileNumber);
-        playList.getFocusModel().focus(oldValue);
-        
+        playNextMedia();
     }
     public void previousButtonClicked(ActionEvent e) {
         if (nextButton.isDisable()) {
@@ -187,8 +169,29 @@ public class MediaPlayerFXMLController implements Initializable {
         
     }
     
+    public void stopButtonClicked(ActionEvent e) {
+        
+        timeText.setText("00:00");
+        totalTimeText.setText("- -:- -");
+        
+        if (mediaPlayer == null) {
+            return;
+        }
+        
+        
+        mediaPlayer.stop();
+        playButton.setSelected(false);
+        
+        progressBar.setDisable(true);
+        progressSlider.setDisable(true);
+        
+    }
     
     public void playButtonClicked(ActionEvent e) {
+        if (progressBar.isDisabled() || progressSlider.isDisabled()) {
+            progressBar.setDisable(false);
+            progressSlider.setDisable(false);
+        }
         
         if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             mediaPlayer.pause();
@@ -200,10 +203,16 @@ public class MediaPlayerFXMLController implements Initializable {
     public void chooseFileClicked(ActionEvent e) {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(null);
+        
+        if (file == null) {
+            return;
+        }
+        
         path = file.toString();
         
         nextButton.setDisable(true);
         previousButton.setDisable(true);
+        
         initiateMediaPlayer(path);
     }
     
@@ -211,7 +220,11 @@ public class MediaPlayerFXMLController implements Initializable {
     
     @SuppressWarnings("unchecked")
     public void setRootFolderButtonClicked(ActionEvent e) {
+        Map<File,String> oldPlayList = new TreeMap<>();
+        
+        // if the playList ist empty save a copy if the user cancels the change
         if (!playList.getItems().isEmpty()) {
+            oldPlayList = filesPlayList;
             playList.getItems().clear();
         }
 
@@ -220,6 +233,12 @@ public class MediaPlayerFXMLController implements Initializable {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         rootDirectory = directoryChooser.showDialog(null);
 
+        if (rootDirectory == null) {
+            filesPlayList = oldPlayList;
+            playList.getItems().addAll(filesPlayList);
+            return;
+        }
+        
         getAllFiles(rootDirectory);
  
         playList.getItems().addAll(filesPlayList.values());
@@ -278,14 +297,22 @@ public class MediaPlayerFXMLController implements Initializable {
         
         mediaPlayer.currentTimeProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
             progressSlider.setValue(newValue.toSeconds());
+            
+            textMatchEndVideo(timeText.getText(), totalTimeText.getText());
+            
         });
             
         progressSlider.setOnMousePressed((MouseEvent t) -> {
             mediaPlayer.seek(Duration.seconds(progressSlider.getValue()));
+            
+            textMatchEndVideo(timeText.getText(), totalTimeText.getText());
+            
         });
             
         progressSlider.setOnMouseDragged((MouseEvent t) -> {
             mediaPlayer.seek(Duration.seconds(progressSlider.getValue()));
+            
+            textMatchEndVideo(timeText.getText(), totalTimeText.getText());
         });
                 
     }
@@ -309,7 +336,7 @@ public class MediaPlayerFXMLController implements Initializable {
             mediaView.setVisible(false);
             imageView.setVisible(false);
         }
-
+        
         if (path != null) {
             media = new Media(Paths.get(path).toUri().toString());
             mediaPlayer = new MediaPlayer(media);
@@ -342,6 +369,7 @@ public class MediaPlayerFXMLController implements Initializable {
                         }
                     }
                 });
+                
 
             }
             
@@ -447,7 +475,10 @@ public class MediaPlayerFXMLController implements Initializable {
     
     private void updateTimeText() {
         timeText.textProperty().bind(Bindings.createStringBinding(() -> {
-            return getTime(mediaPlayer.getCurrentTime()) + "/";
+            
+            totalTimeText.setText(getTime(media.getDuration()));
+            
+            return getTime(mediaPlayer.getCurrentTime());
         }, mediaPlayer.currentTimeProperty()));
     }
     
@@ -479,4 +510,44 @@ public class MediaPlayerFXMLController implements Initializable {
                  minutes, seconds);
     }
     
+    
+    // Arreglar bug con Skindred Nobody, posiblemente con el for loop con cada Char del String
+    private void textMatchEndVideo(String currentTime, String totalTime) {
+        if (!currentTime.equals(totalTime) || totalTime.equals("00:00")) {
+            return;
+        }
+        mediaPlayer.stop();
+        
+        if (playList.getItems().isEmpty()) {
+            playButton.setSelected(false);
+            progressBar.setDisable(true);
+            progressSlider.setDisable(true);
+        }
+        else {
+            playNextMedia();
+        }
+    }
+    
+    private void playNextMedia() {
+        if (previousButton.isDisable()) {
+            previousButton.setDisable(false);
+        }
+
+        // verify if its the last song
+        if (fileNumber >= filesPlayList.size() - 2) {
+            nextButton.setDisable(true);
+        } else {
+            nextButton.setDisable(false);
+        }
+        if (fileNumber > filesPlayList.size() - 2) {
+            return;
+        }
+
+        int oldValue = fileNumber;
+        playList.requestFocus();
+        fileNumber++;
+        initiateMediaPlayer(filesPlayList.keySet().toArray()[fileNumber].toString());
+        playList.getSelectionModel().select(fileNumber);
+        playList.getFocusModel().focus(oldValue);
+    }
 }
