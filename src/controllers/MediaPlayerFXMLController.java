@@ -3,12 +3,14 @@ package controllers;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import java.io.File;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.Callable;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
@@ -22,6 +24,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -61,9 +64,13 @@ public class MediaPlayerFXMLController implements Initializable {
     
     @FXML
     private Slider volumeSlider;
-
     @FXML
     private ProgressBar volumeBar;
+    @FXML
+    private ToggleButton volumeButton;
+    
+    @FXML
+    private Text timeText;
     
     @FXML
     private MediaView mediaView;
@@ -82,10 +89,7 @@ public class MediaPlayerFXMLController implements Initializable {
     
     @FXML
     private ToggleButton nowPlayingButton;
-    
-    private ArrayList<File> fileList;           // List of the files' full paths 
-    private ArrayList<String> fileNameList;     // List used to display names in ViewList
-    
+
     private Map<File, String> filesPlayList;
     
     private int fileNumber = 0;
@@ -111,9 +115,9 @@ public class MediaPlayerFXMLController implements Initializable {
         smallAlbumArt.fitHeightProperty().bind(smallAlbumArtBackground.heightProperty());
         smallAlbumArt.fitWidthProperty().bind(smallAlbumArtBackground.widthProperty());
         
-        // Play tracks in the playlist List
+        // Play tracks in the playlist List using the mouse
         playList.setOnMouseClicked((MouseEvent click) -> {
-            if (click.getClickCount() == 2) {
+            if (click.getClickCount() == 2 && !playList.getItems().isEmpty()) {
                 //Use ListView's getSelected Item
                 fileNumber = playList.getSelectionModel().getSelectedIndex();
 
@@ -121,7 +125,16 @@ public class MediaPlayerFXMLController implements Initializable {
                 initiateMediaPlayer(filesPlayList.keySet().toArray()[fileNumber].toString());
             }
         });
-        
+        // same but with Enter key
+        playList.setOnKeyPressed((key) -> {
+            if (key.getCode() == KeyCode.ENTER && !playList.getItems().isEmpty()) {
+                fileNumber = playList.getSelectionModel().getSelectedIndex();
+
+                updateNextPreviousButtonsState();
+                initiateMediaPlayer(filesPlayList.keySet().toArray()[fileNumber].toString());
+
+            }
+        });  
     }
     
     
@@ -196,12 +209,13 @@ public class MediaPlayerFXMLController implements Initializable {
     
     
     
+    @SuppressWarnings("unchecked")
     public void setRootFolderButtonClicked(ActionEvent e) {
         if (!playList.getItems().isEmpty()) {
             playList.getItems().clear();
         }
 
-        filesPlayList = new LinkedHashMap<>();
+        filesPlayList = new TreeMap<>();
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         rootDirectory = directoryChooser.showDialog(null);
@@ -210,19 +224,34 @@ public class MediaPlayerFXMLController implements Initializable {
  
         playList.getItems().addAll(filesPlayList.values());
         
-        if (!playList.getItems().isEmpty()) {
-            nextButton.setDisable(false);
-        }
-        else {
+        if (playList.getItems().isEmpty()) {
             nextButton.setDisable(true);
         }
     }
 
+    public void volumeButtonClicked(ActionEvent e) {
+        if (volumeButton.isSelected()) {
+            mediaPlayer.volumeProperty().set(0);
+        }
+        else if (volumeSlider.getValue() == 0) {
+            volumeSlider.setValue(100);
+        }
+        else {
+            mediaPlayer.setVolume(volumeSlider.getValue() / 100);
+        }
+    }
+    
     
     private void visualProgression(Slider slider, ProgressBar bar) {
         slider.valueProperty().addListener((obs, oldValue, newValue) -> {
             bar.setProgress(newValue.doubleValue()/slider.getMax());
         });
+    }
+    
+    public void nowPlayingButtonClicked(ActionEvent e) {
+        if (!nowPlayingButton.isSelected()) {
+            nowPlayingButton.setSelected(true);
+        }
     }
     
     
@@ -272,6 +301,9 @@ public class MediaPlayerFXMLController implements Initializable {
     private void initiateMediaPlayer(String path) {
         fileNameText.wrappingWidthProperty().bind(smallAlbumArtBackground.widthProperty());
         
+        currentArtist = null;
+        currentTrack = null;
+        
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaView.setVisible(false);
@@ -307,20 +339,25 @@ public class MediaPlayerFXMLController implements Initializable {
                         if (currentArtist != null && currentTrack != null) {
                             setStageName(currentTrack + " - " + currentArtist);
                             fileNameText.setText(currentTrack);
-                            
-                            currentArtist = null;
-                            currentTrack = null;
                         }
                     }
                 });
 
             }
             
+            volumeBar.setDisable(false);
+            volumeSlider.setDisable(false);
+            volumeButton.setDisable(false);
+            
             updateProgressBar();
+            updateTimeText();
+            updateMediaLenght();
+            updateMediaVolume();
+            
             mediaPlayer.play();
         }
     }
-    
+
     private void setStageName(String track) {
         wmediaplayer.WMediaPlayer.getStage().setTitle(track + " - Media Player 11");
     }
@@ -375,7 +412,7 @@ public class MediaPlayerFXMLController implements Initializable {
         }
     }
     
-    
+
     private static boolean isVideoFile(String path) {
         String mimeType = URLConnection.guessContentTypeFromName(path);
         return mimeType != null && mimeType.startsWith("video");
@@ -384,12 +421,62 @@ public class MediaPlayerFXMLController implements Initializable {
         String mimeType = URLConnection.guessContentTypeFromName(path);
         return mimeType != null && mimeType.startsWith("audio");
     }
+   
+    private void updateMediaLenght() {
+        mediaPlayer.setOnReady(() -> {
+            Duration total = media.getDuration();
+            progressSlider.setMax(total.toSeconds());
+        });
+    }
+    private void updateMediaVolume() {
+        
+        volumeSlider.setValue(mediaPlayer.getVolume()*100);
+        
+        volumeSlider.valueProperty().addListener((Observable o) -> {
+            mediaPlayer.setVolume(volumeSlider.getValue()/100);
+            
+            if (mediaPlayer.getVolume() == 0) {
+                volumeButton.setSelected(true);
+            }
+            else {
+                volumeButton.setSelected(false);
+            }
+            
+        });
+    }
     
-
-    public void nowPlayingButtonClicked(ActionEvent e) {
-        if (!nowPlayingButton.isSelected()) {
-            nowPlayingButton.setSelected(true);
+    private void updateTimeText() {
+        timeText.textProperty().bind(Bindings.createStringBinding(() -> {
+            return getTime(mediaPlayer.getCurrentTime()) + "/";
+        }, mediaPlayer.currentTimeProperty()));
+    }
+    
+    private String getTime(Duration time) {
+        
+        int hours = (int) time.toHours();
+        int minutes = (int) time.toMinutes();
+        int seconds = (int) time.toSeconds();
+        
+        if (seconds > 59)  {
+            seconds %= 60;
         }
+        
+        if (minutes > 59) {
+            minutes %= 60;
+        }
+        
+        if (hours > 59) {
+            hours %= 60;
+        }
+        
+        if (hours>0) {
+            return String.format("%d:%02d:%02d",
+                    hours, minutes, seconds);
+        }
+
+        
+        return String.format("%02d:%02d",
+                 minutes, seconds);
     }
     
 }

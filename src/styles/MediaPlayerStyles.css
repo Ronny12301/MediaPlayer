@@ -168,7 +168,7 @@
     -fx-background-color: #4F516348;
 }
 .nav-buttons:selected {
-    -fx-background-color: linear-gradient(#8e8dd420 0%, #405bee85 50%, #3A8DD420 100%);
+    -fx-background-color: linear-gradient(#8e8dd420 0%, #405bee85 47%, #3A8DD420 100%);
     -fx-border-color: black;
 }
 
