@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -20,7 +21,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MediaPlayerFXMLController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #000000;" styleClass="root" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MediaPlayerFXMLController">
    <top>
       <HBox alignment="CENTER_LEFT" styleClass="nav-bar" stylesheets="@../styles/MediaPlayerStyles.css" BorderPane.alignment="CENTER">
          <children>
@@ -43,13 +44,13 @@
             </HBox>
             <HBox alignment="BOTTOM_CENTER" prefWidth="483.0" HBox.hgrow="ALWAYS">
                <children>
-                  <ToggleButton mnemonicParsing="false" prefHeight="42.0" prefWidth="8000.0" selected="true" styleClass="nav-buttons" text="Now Playing" textFill="WHITE" HBox.hgrow="ALWAYS">
+                  <ToggleButton fx:id="nowPlayingButton" mnemonicParsing="false" onAction="#nowPlayingButtonClicked" prefHeight="42.0" prefWidth="8000.0" selected="true" styleClass="nav-buttons" text="Now Playing" textFill="WHITE" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>
                   </ToggleButton>
                   <Region HBox.hgrow="ALWAYS" />
-                  <ToggleButton mnemonicParsing="false" prefHeight="42.0" prefWidth="8000.0" styleClass="nav-buttons" text="Library" textFill="WHITE">
+                  <ToggleButton disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="8000.0" styleClass="nav-buttons" text="Library" textFill="WHITE">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>
@@ -73,42 +74,55 @@
       </HBox>
    </top>
    <center>
-      <SplitPane dividerPositions="0.7891063335456904" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.7217956019061831" minHeight="0.0" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
          <items>
-            <VBox fx:id="screenBackground" alignment="CENTER" fillWidth="false" minHeight="0.0">
+            <VBox fx:id="screenBackground" alignment="CENTER" fillWidth="false" minHeight="0.0" SplitPane.resizableWithParent="false">
                <children>
                   <StackPane>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                      <children>
-                        <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" rotate="90.0">
+                        <MediaView fx:id="mediaView" fitHeight="1.0" fitWidth="1.0" rotate="90.0">
                            <viewport>
                               <Rectangle2D />
                            </viewport>
                         </MediaView>
-                        <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageView" fitHeight="1.0" fitWidth="1.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </StackPane>
                </children>
             </VBox>
-            <SplitPane dividerPositions="0.2595243100766782" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="split-pane-divider" stylesheets="@../styles/MediaPlayerStyles.css" SplitPane.resizableWithParent="false">
+            <SplitPane dividerPositions="0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="split-pane-divider" stylesheets="@../styles/MediaPlayerStyles.css" SplitPane.resizableWithParent="false">
               <items>
-                  <VBox alignment="BOTTOM_CENTER" minWidth="0.0" style="-fx-background-color: white;" SplitPane.resizableWithParent="false">
+                  <VBox alignment="BOTTOM_CENTER" minWidth="0.0" style="-fx-background-color: #F3F0FA;" SplitPane.resizableWithParent="false">
                      <children>
-                        <HBox alignment="TOP_CENTER" minHeight="0.0" minWidth="0.0" prefHeight="407.0" prefWidth="161.0" styleClass="album-art" stylesheets="@../styles/MediaPlayerStyles.css" />
-                        <Text fx:id="fileNameText" boundsType="VISUAL" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 14 rem;" text="Song Name" textAlignment="CENTER" VBox.vgrow="NEVER">
+                        <HBox fx:id="smallAlbumArtBackground" alignment="CENTER" minHeight="0.0" minWidth="0.0" styleClass="root" stylesheets="@../styles/MediaPlayerStyles.css" VBox.vgrow="SOMETIMES">
+                           <children>
+                              <ImageView fx:id="smallAlbumArt" fitHeight="1.0" fitWidth="1.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 13, 0, 0, 0);">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                                 <image>
+                                    <Image url="@../styles/img/Media-Player-icon.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="14.0" left="6.0" right="6.0" top="15.0" />
+                           </VBox.margin></HBox>
+                        <Text fx:id="fileNameText" boundsType="VISUAL" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" textOrigin="CENTER" wrappingWidth="190.8442344069481">
                            <font>
-                              <Font size="15.0" />
+                              <Font size="14.0" />
                            </font>
                            <VBox.margin>
-                              <Insets bottom="2.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" />
                            </VBox.margin>
                         </Text>
                         <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="2.0" prefWidth="161.0" style="-fx-background-color: #E1E1E1;" VBox.vgrow="NEVER" />
                      </children>
                   </VBox>
-                  <ListView fx:id="playList" minWidth="0.0" SplitPane.resizableWithParent="false" />
+                  <ListView fx:id="playList" minWidth="0.0" style="-fx-background-color: #F3F0FA;" SplitPane.resizableWithParent="false" />
               </items>
             </SplitPane>
          </items>
@@ -122,7 +136,7 @@
                   <Insets bottom="2.0" />
                </VBox.margin>
                <children>
-                  <ProgressBar fx:id="progressBar" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" prefWidth="8000.0" progress="0.0" styleClass="progress-fill">
+                  <ProgressBar fx:id="progressBar" disable="true" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" prefWidth="8000.0" progress="0.0" styleClass="progress-fill">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -130,7 +144,7 @@
                         <Insets left="8.0" right="9.0" />
                      </StackPane.margin>
                   </ProgressBar>
-                  <Slider fx:id="progressSlider" blockIncrement="1.0" prefHeight="10.0" prefWidth="655.0" styleClass="progress-slider" stylesheets="@../styles/MediaPlayerStyles.css">
+                  <Slider fx:id="progressSlider" blockIncrement="1.0" disable="true" prefHeight="10.0" prefWidth="655.0" styleClass="progress-slider" stylesheets="@../styles/MediaPlayerStyles.css">
                      <StackPane.margin>
                         <Insets left="5.0" right="6.0" />
                      </StackPane.margin>
@@ -157,8 +171,8 @@
                            <children>
                               <AnchorPane layoutX="124.0" layoutY="3.0000009536743164">
                                  <children>
-                                    <Button id="btn-next-song" layoutX="113.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="81.0" styleClass="btn-change-track" />
-                                    <Button id="btn-previous-song" layoutX="1.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="81.0" styleClass="btn-change-track" />
+                                    <Button id="btn-next-song" fx:id="nextButton" disable="true" layoutX="113.0" mnemonicParsing="false" onAction="#nextButtonClicked" prefHeight="30.0" prefWidth="81.0" styleClass="btn-change-track" />
+                                    <Button id="btn-previous-song" fx:id="previousButton" disable="true" layoutX="1.0" mnemonicParsing="false" onAction="#previousButtonClicked" prefHeight="30.0" prefWidth="81.0" styleClass="btn-change-track" />
                                  </children>
                               </AnchorPane>
                               <Button id="btn-stop" layoutX="93.0" layoutY="10.000000953674316" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" stylesheets="@../styles/MediaPlayerStyles.css" />

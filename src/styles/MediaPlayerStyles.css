@@ -15,8 +15,8 @@
 }
 
 .split-pane-divider {
-    -fx-background-color: white;
-    -fx-border-color: white;
+    -fx-background-color: #F3F0FA;
+    -fx-border-color: #F3F0FA;
     -fx-border-width: 0;
     -fx-border-insets: 0;
 }
@@ -159,15 +159,6 @@
     -fx-background-color: radial-gradient(center 50% 50% , radius 200% , #3635aa, #ffffff);
 }
 
-.album-art {
-    -fx-background-image: url("img/Media-Player-icon.png");
-    -fx-background-position: center;
-    -fx-background-size: contain;
-    -fx-background-repeat: no-repeat;
-    
-}
-
-
 .nav-buttons {
     -fx-background-color: transparent;
     -fx-font-size: 14 rem;
@@ -177,7 +168,7 @@
     -fx-background-color: #4F516348;
 }
 .nav-buttons:selected {
-    -fx-background-color: linear-gradient(#8e8dd420 0%, #405bee90 50%, #3A8DD420 100%);
+    -fx-background-color: linear-gradient(#8e8dd420 0%, #405bee85 50%, #3A8DD420 100%);
     -fx-border-color: black;
 }
 
