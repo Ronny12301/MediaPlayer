@@ -38,6 +38,8 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 
+// test seether roses. why it stops 2 seconds before
+
 /**
  * FXML Controller class
  *
@@ -380,8 +382,13 @@ public class MediaPlayerFXMLController implements Initializable {
             return;
         }
 
-        
-        mediaPlayer = new MediaPlayer(media);
+        try {
+            mediaPlayer = new MediaPlayer(media);
+        }
+        catch (Exception er) {
+            System.err.println("Error creating Player: " + er.getMessage());
+            return;
+        }
         playButton.setDisable(false);
         playButton.setSelected(true);
 
