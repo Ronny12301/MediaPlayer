@@ -328,7 +328,7 @@ public class MediaPlayerFXMLController implements Initializable {
         progressSlider.valueProperty().addListener((ov, oldValue, newValue) -> {
             double currenTime = mediaPlayer.getCurrentTime().toSeconds();
             
-            if (Math.abs( currenTime - newValue.doubleValue() ) > 0.5) {
+            if (Math.abs( currenTime - newValue.doubleValue() ) > 0.1) {
                 mediaPlayer.seek( Duration.seconds(newValue.doubleValue()) );
             }
         });
@@ -415,18 +415,17 @@ public class MediaPlayerFXMLController implements Initializable {
                     }
                 }
             });
-            
-            volumeBar.setDisable(false);
-            volumeSlider.setDisable(false);
-            volumeButton.setDisable(false);
-            
-            updateProgressBar();
-            updateTimeText();
-            updateMediaLenght();
-            updateMediaVolume();
-            
-            mediaPlayer.play();
         }
+        volumeBar.setDisable(false);
+        volumeSlider.setDisable(false);
+        volumeButton.setDisable(false);
+
+        updateProgressBar();
+        updateTimeText();
+        updateMediaLenght();
+        updateMediaVolume();
+
+        mediaPlayer.play();
     }
 
     
