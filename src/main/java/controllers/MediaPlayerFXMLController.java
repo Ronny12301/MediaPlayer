@@ -244,13 +244,8 @@ public class MediaPlayerFXMLController implements Initializable {
         rootDirectory = directoryChooser.showDialog(null);
 
         if (rootDirectory == null) {
-            
-            // this avoids displaying a  "{}" in the ListView
-            if (filePlayList.isEmpty()) {
-                return;
-            }
             filePlayList = oldPlayList;
-            playList.getItems().addAll(filePlayList);
+            playList.getItems().addAll(filePlayList.values());
             return;
         }
         
@@ -316,16 +311,16 @@ public class MediaPlayerFXMLController implements Initializable {
         progressBar.setDisable(false);
         progressSlider.setDisable(false);
         
-        // update visual progress
+        // click-drag bar  (abs value to change in both ways)
         progressSlider.valueProperty().addListener((ov, oldValue, newValue) -> {
             double currentTime = mediaPlayer.getCurrentTime().toSeconds();
             
-            if (( newValue.doubleValue() - currentTime ) > 0.1) {
+            if (Math.abs( currentTime - newValue.doubleValue() ) > 0.1) {
                 mediaPlayer.seek( Duration.seconds(newValue.doubleValue()) );
             }
         });
         
-        // click and drag
+        // update visual progress
         mediaPlayer.currentTimeProperty().addListener((ObservableValue<? extends Duration> ov, Duration oldValue, Duration newValue) -> {
             if(!progressSlider.isValueChanging()) {
                 progressSlider.setValue(newValue.toSeconds() );
