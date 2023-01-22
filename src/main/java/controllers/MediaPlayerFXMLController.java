@@ -139,12 +139,12 @@ public class MediaPlayerFXMLController implements Initializable {
         playList.setOnKeyPressed((key) -> {
             if (key.getCode() == KeyCode.ENTER && !playList.getItems().isEmpty()) {
                 fileNumber = playList.getSelectionModel().getSelectedIndex();
-
+                
                 updateNextPreviousButtonsState();
                 initiateMediaPlayer(filePlayList.keySet().toArray()[fileNumber].toString());
 
             }
-        });  
+        }); 
     }
     
     
@@ -229,7 +229,6 @@ public class MediaPlayerFXMLController implements Initializable {
     
     
     
-    @SuppressWarnings("unchecked")
     public void setRootFolderButtonClicked(ActionEvent e) {
         Map<File,String> oldPlayList = new TreeMap<>();
         
@@ -255,9 +254,6 @@ public class MediaPlayerFXMLController implements Initializable {
             return;
         }
         
-
-        lblPlaylist.setVisible(true);
-        
         getAllFiles(rootDirectory);
         
         if (filePlayList.isEmpty()) {
@@ -266,6 +262,7 @@ public class MediaPlayerFXMLController implements Initializable {
             lblPlaylist.setVisible(false);
             return;
         }
+        lblPlaylist.setVisible(true);
  
         playList.getItems().addAll(filePlayList.values());
 
@@ -309,7 +306,7 @@ public class MediaPlayerFXMLController implements Initializable {
                 getAllFiles(file);
             } 
             // if is a media file, add to the full path as the key, and name to display the ListView
-            else if (file.isFile() && (isVideoFile(file.toString()) || isAudioFile(file.toString()))) {
+            else if (isVideoFile(file.toString()) || isAudioFile(file.toString())) {
                 filePlayList.put(file, file.getName());
             }
         }        
@@ -318,33 +315,24 @@ public class MediaPlayerFXMLController implements Initializable {
     private void updateProgressBar() {
         progressBar.setDisable(false);
         progressSlider.setDisable(false);
-
-        progressSlider.valueChangingProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean wasChanging, Boolean isChanging) -> {
-            if (!isChanging) {
-                mediaPlayer.seek(Duration.seconds( progressSlider.getValue() ));
-            }
-        });
         
+        // update visual progress
         progressSlider.valueProperty().addListener((ov, oldValue, newValue) -> {
-            double currenTime = mediaPlayer.getCurrentTime().toSeconds();
+            double currentTime = mediaPlayer.getCurrentTime().toSeconds();
             
-            if (Math.abs( currenTime - newValue.doubleValue() ) > 0.1) {
+            if (( newValue.doubleValue() - currentTime ) > 0.1) {
                 mediaPlayer.seek( Duration.seconds(newValue.doubleValue()) );
             }
         });
         
+        // click and drag
         mediaPlayer.currentTimeProperty().addListener((ObservableValue<? extends Duration> ov, Duration oldValue, Duration newValue) -> {
-            double currenTime = mediaPlayer.getCurrentTime().toSeconds();
-            double tolerance = 0.1;
-            
             if(!progressSlider.isValueChanging()) {
                 progressSlider.setValue(newValue.toSeconds() );
             }
-            // there is some loss in precision, so instead of looking the exact value, look for the aprox
-            if (Math.abs(currenTime - media.getDuration().toSeconds()) < tolerance) {
-                endOfVideo();
-            }
         });
+        
+        mediaPlayer.setOnEndOfMedia(() -> endOfMedia());
                            
     }
      
@@ -479,7 +467,6 @@ public class MediaPlayerFXMLController implements Initializable {
         }
     }
     
-
     private static boolean isVideoFile(String path) {
         String mimeType = URLConnection.guessContentTypeFromName(path);
         return mimeType != null && mimeType.startsWith("video");
@@ -498,12 +485,12 @@ public class MediaPlayerFXMLController implements Initializable {
         });
     }
     private void updateMediaVolume() {
-        
-        volumeSlider.setValue(mediaPlayer.getVolume()*100);
-        
+        mediaPlayer.setVolume(volumeSlider.getValue()/100);
+                
         volumeSlider.valueProperty().addListener((Observable o) -> {
             mediaPlayer.setVolume(volumeSlider.getValue()/100);
             
+            // if you set the volume to 0, activate the mute button
             if (mediaPlayer.getVolume() == 0) {
                 volumeButton.setSelected(true);
             }
@@ -551,7 +538,7 @@ public class MediaPlayerFXMLController implements Initializable {
     }
     
     
-    private void endOfVideo() {
+    private void endOfMedia() {
         progressSlider.setValue(0);
         
         if (repeatButton.isSelected()){
@@ -602,5 +589,4 @@ public class MediaPlayerFXMLController implements Initializable {
     private void setStageName(String track) {
         wmediaplayer.WMediaPlayer.getStage().setTitle(track + " - Media Player 11");
     }
-    
 }
