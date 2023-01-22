@@ -85,7 +85,6 @@
                 </executions>
             </plugin>
             
-            
             <!-- Copia las dependencias librerias javafx .jar a la carpeta "lib" de tu proyecto -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -121,8 +120,6 @@
                     </archive>
                 </configuration>
             </plugin>
-            
-            
         </plugins>
     </build>
     <name>WMediaPlayer</name>

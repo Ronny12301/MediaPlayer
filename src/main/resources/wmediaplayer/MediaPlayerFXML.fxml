@@ -103,7 +103,7 @@
                               <Insets bottom="14.0" left="6.0" right="6.0" top="15.0" />
                            </VBox.margin>
                            <children>
-                              <ImageView fx:id="smallAlbumArt" fitHeight="108.0" fitWidth="74.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="smallAlbumArt" fitHeight="108.0" fitWidth="74.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 15, 0, 0, 0);">
                                  <image>
                                     <Image url="@../styles/img/Media-Player-icon.png" />
                                  </image></ImageView>
