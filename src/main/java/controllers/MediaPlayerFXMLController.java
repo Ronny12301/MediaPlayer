@@ -115,7 +115,6 @@ public class MediaPlayerFXMLController implements Initializable {
     private String currentTrack;
     
     
-    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -197,6 +196,7 @@ public class MediaPlayerFXMLController implements Initializable {
     }
     
     public void playButtonClicked(ActionEvent e) {
+        
         if (progressBar.isDisabled() || progressSlider.isDisabled()) {
             progressBar.setDisable(false);
             progressSlider.setDisable(false);
@@ -264,6 +264,12 @@ public class MediaPlayerFXMLController implements Initializable {
     }
 
     public void volumeButtonClicked(ActionEvent e) {
+        
+        // avoid null pointer exception
+        if (mediaPlayer==null) {
+            return;
+        }
+        
         // mute
         if (volumeButton.isSelected()) {
             mediaPlayer.volumeProperty().set(0);
@@ -399,9 +405,6 @@ public class MediaPlayerFXMLController implements Initializable {
                 }
             });
         }
-        volumeBar.setDisable(false);
-        volumeSlider.setDisable(false);
-        volumeButton.setDisable(false);
 
         updateProgressBar();
         updateTimeText();
@@ -480,7 +483,12 @@ public class MediaPlayerFXMLController implements Initializable {
         });
     }
     private void updateMediaVolume() {
-        mediaPlayer.setVolume(volumeSlider.getValue()/100);
+        if (!volumeButton.isSelected()) {
+            mediaPlayer.setVolume(volumeSlider.getValue() / 100);
+        }
+        else {
+            mediaPlayer.setVolume(0);
+        }
                 
         volumeSlider.valueProperty().addListener((Observable o) -> {
             mediaPlayer.setVolume(volumeSlider.getValue()/100);
