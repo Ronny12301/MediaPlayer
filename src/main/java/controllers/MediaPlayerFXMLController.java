@@ -312,6 +312,10 @@ public class MediaPlayerFXMLController implements Initializable {
         mainScene.setOnKeyTyped((t) -> {
             // escape, backspace, enter
             if (t.getCharacter().equals("\u001B") || t.getCharacter().equals("\b") || t.getCharacter().equals("\n") || t.getCharacter().equals("\r")) {
+                
+                if (searchPlaylist.isVisible()) {
+                    searchPlaylist.setVisible(false);
+                }
                 return;
             }
             
