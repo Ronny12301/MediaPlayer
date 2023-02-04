@@ -1,10 +1,10 @@
 # MediaPlayer
 My attempt to replicate the old Windows Media Player 11 in Java
-
-![image](https://user-images.githubusercontent.com/100802754/213898534-f2a3e097-2269-4596-b397-bb6440e60f3d.png)
+![image](https://user-images.githubusercontent.com/100802754/216753453-a3f9244d-450d-4375-9ab0-87a2a9522986.png)
 
 Can play videos and music
 Just select a file that you want to play or set a root folder to add every (media)file to the playlist
-![image](https://user-images.githubusercontent.com/100802754/213898667-ed26aec7-2438-40d8-aae0-e787dfdba7ee.png)
+![image](https://user-images.githubusercontent.com/100802754/216753380-8d600df9-2ce0-4a10-838b-a5a974232fa5.png)
+
 
 This is the first versión, im going to add more features with the time.
