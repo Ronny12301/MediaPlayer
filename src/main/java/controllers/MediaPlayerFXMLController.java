@@ -308,10 +308,10 @@ public class MediaPlayerFXMLController implements Initializable {
     }
     
     public void searchPlaylistItems() {
-        
+
         mainScene.setOnKeyTyped((t) -> {
-            
-            if (t.getCharacter().equals("") || t.getCharacter().equals("")) {
+            // escape, backspace, enter
+            if (t.getCharacter().equals("\u001B") || t.getCharacter().equals("\b") || t.getCharacter().equals("\n") || t.getCharacter().equals("\r")) {
                 return;
             }
             
@@ -330,6 +330,7 @@ public class MediaPlayerFXMLController implements Initializable {
                 searchPlaylist.setVisible(false);
             }
             
+            
             // not being backspace avoids lag when removing al text, holding backspace
             if (!playList.getItems().isEmpty() && !t.getCode().equals(KeyCode.BACK_SPACE)) {
                 int index = findKeyIndex(filePlayList, searchPlaylist.getText());
@@ -343,7 +344,6 @@ public class MediaPlayerFXMLController implements Initializable {
                 
                 if (t.getCode().equals(KeyCode.ENTER)) {
                     playSelectedItem();
-//                    searchPlaylist.clear();
                     searchPlaylist.setVisible(false);
                 }
             }
