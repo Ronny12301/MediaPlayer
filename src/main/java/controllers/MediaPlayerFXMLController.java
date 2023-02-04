@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -22,11 +23,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -45,6 +48,9 @@ import javafx.util.Duration;
  */
 public class MediaPlayerFXMLController implements Initializable {
 
+    @FXML
+    private BorderPane mainScene;
+    
     @FXML
     private Text fileNameText;
     
@@ -96,6 +102,8 @@ public class MediaPlayerFXMLController implements Initializable {
     private ListView playList;
     @FXML
     private Label lblPlaylist;
+    @FXML
+    private TextField searchPlaylist;
     
     @FXML
     private ToggleButton nowPlayingButton;
@@ -120,30 +128,31 @@ public class MediaPlayerFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         visualSyncProgressSliderBar(progressSlider, progressBar);
         visualSyncProgressSliderBar(volumeSlider, volumeBar); 
+        searchPlaylistItems();
 
         smallAlbumArt.fitHeightProperty().bind(smallAlbumArtBackground.heightProperty());
         smallAlbumArt.fitWidthProperty().bind(smallAlbumArtBackground.widthProperty());
         
         // Play tracks in the playlist List using the mouse
         playList.setOnMouseClicked((MouseEvent click) -> {
+                        
             if (click.getClickCount() == 2 && !playList.getItems().isEmpty()) {
-                //Use ListView's getSelected Item
-                fileNumber = playList.getSelectionModel().getSelectedIndex();
-
-                updateNextPreviousButtonsState();
-                initiateMediaPlayer(filePlayList.keySet().toArray()[fileNumber].toString());
+                playSelectedItem();
             }
         });
         // same but with Enter key
         playList.setOnKeyPressed((key) -> {
             if (key.getCode() == KeyCode.ENTER && !playList.getItems().isEmpty()) {
-                fileNumber = playList.getSelectionModel().getSelectedIndex();
-                
-                updateNextPreviousButtonsState();
-                initiateMediaPlayer(filePlayList.keySet().toArray()[fileNumber].toString());
-
+                playSelectedItem();
             }
         }); 
+    }
+    private void playSelectedItem() {
+        //Use ListView's getSelected Item
+        fileNumber = playList.getSelectionModel().getSelectedIndex();
+
+        updateNextPreviousButtonsState();
+        initiateMediaPlayer(filePlayList.keySet().toArray()[fileNumber].toString());
     }
     
     
@@ -177,6 +186,7 @@ public class MediaPlayerFXMLController implements Initializable {
         }
         initiateMediaPlayer(filePlayList.keySet().toArray()[fileNumber].toString());
         playList.getSelectionModel().select(fileNumber);
+        playList.scrollTo(fileNumber);
         playList.getFocusModel().focus(oldValue);
         
     }
@@ -296,6 +306,57 @@ public class MediaPlayerFXMLController implements Initializable {
             nowPlayingButton.setSelected(true);
         }
     }
+    
+    public void searchPlaylistItems() {
+
+        mainScene.setOnKeyTyped((t) -> {
+            // escape, backspace, enter
+            if (t.getCharacter().equals("\u001B") || t.getCharacter().equals("\b") || t.getCharacter().equals("\n") || t.getCharacter().equals("\r")) {
+                return;
+            }
+            
+            if (searchPlaylist.getText().isBlank()) {
+                searchPlaylist.setVisible(true);
+            }
+            
+            searchPlaylist.setText(t.getCharacter());
+            searchPlaylist.requestFocus();
+            searchPlaylist.positionCaret(searchPlaylist.getLength());
+        });
+
+        searchPlaylist.setOnKeyPressed((t) -> {
+            if (t.getCode().equals(KeyCode.ESCAPE) || t.getCode().equals(KeyCode.ENTER)) {
+                searchPlaylist.clear();
+                searchPlaylist.setVisible(false);
+            }
+            
+            
+            // not being backspace avoids lag when removing al text, holding backspace
+            if (!playList.getItems().isEmpty() && !t.getCode().equals(KeyCode.BACK_SPACE)) {
+                int index = findKeyIndex(filePlayList, searchPlaylist.getText());
+                if (index != -1) {
+                    playList.requestFocus();
+                    playList.getSelectionModel().select(index);
+                    playList.scrollTo(index);
+                    searchPlaylist.requestFocus();
+                    searchPlaylist.positionCaret(searchPlaylist.getLength());
+                }
+                
+                if (t.getCode().equals(KeyCode.ENTER)) {
+                    playSelectedItem();
+                    searchPlaylist.setVisible(false);
+                }
+            }
+            
+            
+        });
+    }
+    
+    
+    
+    
+    
+    
     
     public void getAllFiles(File directory) {
         files = directory.listFiles();
@@ -579,8 +640,10 @@ public class MediaPlayerFXMLController implements Initializable {
         
         if (randomButton.isSelected()) {
             fileNumber = new Random().nextInt(filePlayList.size());
+            playList.scrollTo(fileNumber);
         }
         else {
+            playList.scrollTo(oldValue);
             fileNumber++;
         }
         initiateMediaPlayer(filePlayList.keySet().toArray()[fileNumber].toString());
@@ -588,6 +651,25 @@ public class MediaPlayerFXMLController implements Initializable {
         playList.getFocusModel().focus(oldValue);
     }
     
+    
+    public static int findKeyIndex(Map<File, String> map, String searchString) {
+        ArrayList<File> keys = new ArrayList<>(map.keySet());
+        if (searchString == null || searchString.isEmpty()) {
+            return -1;
+        }
+        System.out.println("Keys list size: " + keys.size());
+        for (File key : keys) {
+            System.out.println("Checking key: " + key.toString());
+            System.out.println("Search string: " + searchString);
+            if (key.toString().toLowerCase().contains(searchString.toLowerCase())) {
+                System.out.println("Found match: " + key.toString());
+                return keys.indexOf(key);
+            }
+        }
+        System.out.println("No match found");
+        return -1;
+    }
+
     
     private void setStageName(String track) {
         wmediaplayer.WMediaPlayer.getStage().setTitle(track + " - Media Player 11");
