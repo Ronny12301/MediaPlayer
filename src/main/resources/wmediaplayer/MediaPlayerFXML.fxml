@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -22,18 +23,18 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #000000;" styleClass="root" stylesheets="@../styles/MediaPlayerStyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MediaPlayerFXMLController">
+<BorderPane fx:id="mainScene" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #000000;" styleClass="root" stylesheets="@../styles/MediaPlayerStyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MediaPlayerFXMLController">
    <top>
       <HBox alignment="CENTER_LEFT" styleClass="nav-bar" stylesheets="@../styles/MediaPlayerStyles.css" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="71.0" styleClass="background-btns" stylesheets="@../styles/MediaPlayerStyles.css" HBox.hgrow="NEVER">
                <children>
-                  <Button id="arrow-back" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="circular-buttons" stylesheets="@../styles/MediaPlayerStyles.css" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="NEVER">
+                  <Button id="arrow-back" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="circular-buttons" stylesheets="@../styles/MediaPlayerStyles.css" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets bottom="1.0" />
                      </HBox.margin>
                   </Button>
-                  <Button id="arrow-forward" alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="circular-buttons" stylesheets="@../styles/MediaPlayerStyles.css" textFill="WHITE">
+                  <Button id="arrow-forward" alignment="CENTER" disable="true" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="circular-buttons" stylesheets="@../styles/MediaPlayerStyles.css" textFill="WHITE">
                      <HBox.margin>
                         <Insets bottom="1.0" left="4.0" />
                      </HBox.margin>
@@ -77,27 +78,23 @@
    <center>
       <SplitPane dividerPositions="0.7217956019061831" minHeight="0.0" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
          <items>
-            <StackPane SplitPane.resizableWithParent="false">
+            <VBox fx:id="screenBackground" alignment="CENTER" fillWidth="false" minHeight="0.0" SplitPane.resizableWithParent="false">
                <children>
-                  <VBox fx:id="screenBackground" alignment="CENTER" fillWidth="false" minHeight="0.0">
+                  <StackPane>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                      <children>
-                        <StackPane>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                           <children>
-                              <MediaView fx:id="mediaView" fitHeight="1.0" fitWidth="1.0" rotate="90.0">
-                                 <viewport>
-                                    <Rectangle2D />
-                                 </viewport>
-                              </MediaView>
-                              <ImageView fx:id="imageView" fitHeight="1.0" fitWidth="1.0" pickOnBounds="true" preserveRatio="true" />
-                           </children>
-                        </StackPane>
+                        <MediaView fx:id="mediaView" fitHeight="1.0" fitWidth="1.0" rotate="90.0">
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </MediaView>
+                        <ImageView fx:id="imageView" fitHeight="1.0" fitWidth="1.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
-                  </VBox>
+                  </StackPane>
                </children>
-            </StackPane>
+            </VBox>
             <SplitPane dividerPositions="0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="split-pane-divider" stylesheets="@../styles/MediaPlayerStyles.css" SplitPane.resizableWithParent="false">
               <items>
                   <VBox alignment="BOTTOM_CENTER" minWidth="0.0" style="-fx-background-color: #F3F0FA;" SplitPane.resizableWithParent="false">
@@ -130,11 +127,20 @@
                               <Insets bottom="3.0" />
                            </VBox.margin>
                         </Label>
-                        <ListView fx:id="playList" minWidth="0.0" style="-fx-background-color: #F3F0FA;">
-                           <padding>
-                              <Insets bottom="4.0" />
-                           </padding>
-                        </ListView>
+                        <StackPane>
+                           <children>
+                              <ListView fx:id="playList" minWidth="0.0" style="-fx-background-color: #F3F0FA;">
+                                 <padding>
+                                    <Insets bottom="4.0" />
+                                 </padding>
+                              </ListView>
+                              <TextField fx:id="searchPlaylist" promptText="search" visible="false" StackPane.alignment="BOTTOM_RIGHT">
+                                 <StackPane.margin>
+                                    <Insets bottom="3.0" />
+                                 </StackPane.margin>
+                              </TextField>
+                           </children>
+                        </StackPane>
                      </children>
                   </VBox>
               </items>
