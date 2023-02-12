@@ -5,3 +5,8 @@ My attempt to replicate the old Windows Media Player 11 in Java
 Can play videos and music
 Just select a file that you want to play or set a root folder to add every (media)file to the playlist
 ![image](https://user-images.githubusercontent.com/100802754/216753380-8d600df9-2ce0-4a10-838b-a5a974232fa5.png)
+
+# Command-line install
+Launch app installer via command-line on Linux, Mac, or Windows.
+
+`/bin/bash -c "$(curl -fsSL https://www.jdeploy.com/~w-media-player/install.sh)"`
