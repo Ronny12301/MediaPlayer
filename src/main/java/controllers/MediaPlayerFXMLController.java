@@ -1,18 +1,17 @@
 package controllers;
 
+import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Paths;
-import java.util.ResourceBundle;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
+import java.util.ResourceBundle;
 import java.util.TreeMap;
+
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
-
 import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
@@ -112,9 +111,6 @@ public class MediaPlayerFXMLController implements Initializable {
     
     private int fileNumber;
     
-    private File rootDirectory;
-    private File[] files;
-    
     private String path;
     private Media media;
     private MediaPlayer mediaPlayer;
@@ -148,7 +144,7 @@ public class MediaPlayerFXMLController implements Initializable {
         }); 
     }
     private void playSelectedItem() {
-        //Use ListView's getSelected Item
+
         fileNumber = playList.getSelectionModel().getSelectedIndex();
 
         updateNextPreviousButtonsState();
@@ -251,7 +247,7 @@ public class MediaPlayerFXMLController implements Initializable {
         filePlayList = new TreeMap<>();
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        rootDirectory = directoryChooser.showDialog(null);
+        File rootDirectory = directoryChooser.showDialog(null);
 
         if (rootDirectory == null) {
             filePlayList = oldPlayList;
@@ -294,7 +290,12 @@ public class MediaPlayerFXMLController implements Initializable {
         }
     }
  
-    // keeps in syc the slider to look like its filled with color
+    /**
+     * Keeps in syc the slider and the progress bar to look like its filled with color
+     * 
+     * @param slider
+     * @param bar
+     */
     private void visualSyncProgressSliderBar(Slider slider, ProgressBar bar) {
         slider.valueProperty().addListener((obs, oldValue, newValue) -> {
             bar.setProgress(newValue.doubleValue()/slider.getMax());
@@ -356,14 +357,8 @@ public class MediaPlayerFXMLController implements Initializable {
         });
     }
     
-    
-    
-    
-    
-    
-    
-    public void getAllFiles(File directory) {
-        files = directory.listFiles();
+    private void getAllFiles(File directory) {
+        File[] files = directory.listFiles();
         
         for (File file : files) { 
             
@@ -378,6 +373,9 @@ public class MediaPlayerFXMLController implements Initializable {
         }        
     }
     
+    /**
+     * Updates the progress bar with the media time
+     */
     private void updateProgressBar() {
         progressBar.setDisable(false);
         progressSlider.setDisable(false);
@@ -479,7 +477,7 @@ public class MediaPlayerFXMLController implements Initializable {
         mediaPlayer.play();
     }
 
-    
+    // todo: use a dedicated metadata handler since not every file format is supported
     private void handleMetadata(String key, Object value) {
         
         switch (key) {
