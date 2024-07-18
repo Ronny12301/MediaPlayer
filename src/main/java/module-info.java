@@ -3,6 +3,7 @@ module wmediaplayer {
     requires javafx.fxml;
     requires javafx.media;
     requires javafx.graphics;
+    requires javafx.base;
 
     opens wmediaplayer to javafx.fxml;
     opens controllers to javafx.fxml;

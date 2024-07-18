@@ -95,7 +95,7 @@
                   </StackPane>
                </children>
             </VBox>
-            <SplitPane dividerPositions="0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="split-pane-divider" stylesheets="@../styles/MediaPlayerStyles.css" SplitPane.resizableWithParent="false">
+            <SplitPane dividerPositions="0.35" maxHeight="1.7976931348623157E308" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="split-pane-divider" stylesheets="@../styles/MediaPlayerStyles.css" SplitPane.resizableWithParent="false">
               <items>
                   <VBox alignment="BOTTOM_CENTER" minWidth="0.0" style="-fx-background-color: #F3F0FA;" SplitPane.resizableWithParent="false">
                      <children>
@@ -117,19 +117,19 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" />
                            </VBox.margin>
                         </Text>
-                        <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="2.0" prefWidth="161.0" style="-fx-background-color: #E1E1E1;" VBox.vgrow="NEVER" />
+                        <Pane maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="2.0" prefWidth="161.0" style="-fx-background-color: #E1E1E1;" VBox.vgrow="NEVER" />
                      </children>
                   </VBox>
-                  <VBox alignment="TOP_CENTER" SplitPane.resizableWithParent="false">
+                  <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="9999.0" SplitPane.resizableWithParent="false">
                      <children>
                         <Label fx:id="lblPlaylist" alignment="TOP_CENTER" text="Playlist" visible="false">
                            <VBox.margin>
                               <Insets bottom="3.0" />
                            </VBox.margin>
                         </Label>
-                        <StackPane>
+                        <StackPane maxHeight="1.7976931348623157E308">
                            <children>
-                              <ListView fx:id="playList" minWidth="0.0" style="-fx-background-color: #F3F0FA;">
+                              <ListView fx:id="playList" maxHeight="1.7976931348623157E308" minWidth="0.0" prefHeight="99999.0" style="-fx-background-color: #F3F0FA;">
                                  <padding>
                                     <Insets bottom="4.0" />
                                  </padding>
