@@ -6,7 +6,4 @@ Can play videos and music
 Just select a file that you want to play or set a root folder to add every (media)file to the playlist
 ![image](https://user-images.githubusercontent.com/100802754/216753380-8d600df9-2ce0-4a10-838b-a5a974232fa5.png)
 
-# Command-line install
-Launch app installer via command-line on Linux, or Mac.
-
-`/bin/bash -c "$(curl -fsSL https://www.jdeploy.com/~w-media-player/install.sh)"`
+![Media Playerpng](https://github.com/user-attachments/assets/b1c7f641-9fa4-4edc-b0d5-18caf3a389a3)
