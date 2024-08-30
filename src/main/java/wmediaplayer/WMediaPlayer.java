@@ -32,7 +32,7 @@ public class WMediaPlayer extends Application {
 
         Scene scene = new Scene(root);
         
-        Image icon = new Image("styles/img/Media-Player-icon.png");
+        Image icon = new Image(getClass().getResource("/styles/img/Media-Player-icon.png").toExternalForm());
         stage.getIcons().add(icon);
         
         stage.setScene(scene);

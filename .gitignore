@@ -24,3 +24,8 @@ hs_err_pid*
 /build/
 /dist/
 /target/
+
+# IntelliJ
+*.iml
+/.idea
+/out
