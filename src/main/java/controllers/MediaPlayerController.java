@@ -2,17 +2,12 @@ package controllers;
 
 import java.io.File;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
-import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,15 +32,18 @@ import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.util.Duration;
 
+import helpers.Playback;
+import helpers.Playlist;
+
+import static helpers.Misc.setStageName;
 
 /**
  * FXML Controller class
  *
  * @author ronny12301
  */
-public class MediaPlayerFXMLController implements Initializable {
+public class MediaPlayerController implements Initializable {
 
     @FXML
     private BorderPane mainScene;
@@ -98,7 +96,7 @@ public class MediaPlayerFXMLController implements Initializable {
     private VBox screenBackground;
 
     @FXML
-    private ListView playList;
+    private ListView<String> playList;
     @FXML
     private Label lblPlaylist;
     @FXML
@@ -110,9 +108,7 @@ public class MediaPlayerFXMLController implements Initializable {
     private Map<File, String> filePlayList;
     
     private int fileNumber;
-    
-    private String path;
-    private Media media;
+
     private MediaPlayer mediaPlayer;
     
     private String currentArtist;
@@ -122,8 +118,8 @@ public class MediaPlayerFXMLController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        visualSyncProgressSliderBar(progressSlider, progressBar);
-        visualSyncProgressSliderBar(volumeSlider, volumeBar); 
+        Playback.visualSyncProgressSliderBar(progressSlider, progressBar);
+        Playback.visualSyncProgressSliderBar(volumeSlider, volumeBar);
         searchPlaylistItems();
 
         smallAlbumArt.fitHeightProperty().bind(smallAlbumArtBackground.heightProperty());
@@ -131,7 +127,6 @@ public class MediaPlayerFXMLController implements Initializable {
         
         // Play tracks in the playlist List using the mouse
         playList.setOnMouseClicked((MouseEvent click) -> {
-                        
             if (click.getClickCount() == 2 && !playList.getItems().isEmpty()) {
                 playSelectedItem();
             }
@@ -141,16 +136,14 @@ public class MediaPlayerFXMLController implements Initializable {
             if (key.getCode() == KeyCode.ENTER && !playList.getItems().isEmpty()) {
                 playSelectedItem();
             }
-        }); 
+        });
     }
-    private void playSelectedItem() {
-
+    public void playSelectedItem() {
         fileNumber = playList.getSelectionModel().getSelectedIndex();
 
-        updateNextPreviousButtonsState();
+        Playback.updateNextPreviousButtonsState(nextButton, previousButton, fileNumber, filePlayList);
         initiateMediaPlayer(filePlayList.keySet().toArray()[fileNumber].toString());
     }
-    
     
     public void nextButtonClicked(ActionEvent e) {
         playNextMedia();
@@ -160,7 +153,7 @@ public class MediaPlayerFXMLController implements Initializable {
             nextButton.setDisable(false);
         }
         
-        // verify if its the first song
+        // verify if it's the first song
         if (fileNumber <= 1) {
             previousButton.setDisable(true);
         }
@@ -180,6 +173,7 @@ public class MediaPlayerFXMLController implements Initializable {
         else {
             fileNumber--;
         }
+
         initiateMediaPlayer(filePlayList.keySet().toArray()[fileNumber].toString());
         playList.getSelectionModel().select(fileNumber);
         playList.scrollTo(fileNumber);
@@ -224,21 +218,19 @@ public class MediaPlayerFXMLController implements Initializable {
         if (file == null) {
             return;
         }
-        
-        path = file.toString();
+
+        String path = file.toString();
         
         nextButton.setDisable(true);
         previousButton.setDisable(true);
         
         initiateMediaPlayer(path);
     }
-    
-    
-    
+
     public void setRootFolderButtonClicked(ActionEvent e) {
         Map<File,String> oldPlayList = new TreeMap<>();
         
-        // if the playList isnt empty save a copy if the user cancels the change
+        // if the playList isn't empty save a copy if the user cancels the change
         if (!playList.getItems().isEmpty()) {
             oldPlayList = filePlayList;
             playList.getItems().clear();
@@ -255,7 +247,7 @@ public class MediaPlayerFXMLController implements Initializable {
             return;
         }
         
-        getAllFiles(rootDirectory);
+        Playlist.getAllFiles(rootDirectory, filePlayList);
         
         if (filePlayList.isEmpty()) {
             nextButton.setDisable(true);
@@ -266,7 +258,6 @@ public class MediaPlayerFXMLController implements Initializable {
         lblPlaylist.setVisible(true);
  
         playList.getItems().addAll(filePlayList.values());
-
     }
 
     public void volumeButtonClicked(ActionEvent e) {
@@ -289,41 +280,29 @@ public class MediaPlayerFXMLController implements Initializable {
             mediaPlayer.setVolume(volumeSlider.getValue() / 100);
         }
     }
- 
-    /**
-     * Keeps in syc the slider and the progress bar to look like its filled with color
-     * 
-     * @param slider
-     * @param bar
-     */
-    private void visualSyncProgressSliderBar(Slider slider, ProgressBar bar) {
-        slider.valueProperty().addListener((obs, oldValue, newValue) -> {
-            bar.setProgress(newValue.doubleValue()/slider.getMax());
-        });
-    }
     
     public void nowPlayingButtonClicked(ActionEvent e) {
         if (!nowPlayingButton.isSelected()) {
             nowPlayingButton.setSelected(true);
         }
     }
-    
-    public void searchPlaylistItems() {
+
+    private void searchPlaylistItems() {
 
         mainScene.setOnKeyTyped((t) -> {
             // escape, backspace, enter
             if (t.getCharacter().equals("\u001B") || t.getCharacter().equals("\b") || t.getCharacter().equals("\n") || t.getCharacter().equals("\r")) {
-                
+
                 if (searchPlaylist.isVisible()) {
                     searchPlaylist.setVisible(false);
                 }
                 return;
             }
-            
+
             if (searchPlaylist.getText().isBlank()) {
                 searchPlaylist.setVisible(true);
             }
-            
+
             searchPlaylist.setText(t.getCharacter());
             searchPlaylist.requestFocus();
             searchPlaylist.positionCaret(searchPlaylist.getLength());
@@ -334,11 +313,10 @@ public class MediaPlayerFXMLController implements Initializable {
                 searchPlaylist.clear();
                 searchPlaylist.setVisible(false);
             }
-            
-            
-            // not being backspace avoids lag when removing al text, holding backspace
+
+            // ignoring backspace avoids lag when removing all text, while holding backspace
             if (!playList.getItems().isEmpty() && !t.getCode().equals(KeyCode.BACK_SPACE)) {
-                int index = findKeyIndex(filePlayList, searchPlaylist.getText());
+                int index = Playlist.getSearchedFileIndex(filePlayList, searchPlaylist.getText());
                 if (index != -1) {
                     playList.requestFocus();
                     playList.getSelectionModel().select(index);
@@ -346,66 +324,14 @@ public class MediaPlayerFXMLController implements Initializable {
                     searchPlaylist.requestFocus();
                     searchPlaylist.positionCaret(searchPlaylist.getLength());
                 }
-                
+
                 if (t.getCode().equals(KeyCode.ENTER)) {
                     playSelectedItem();
                     searchPlaylist.setVisible(false);
                 }
             }
-            
-            
+
         });
-    }
-    
-    private void getAllFiles(File directory) {
-        File[] files = directory.listFiles();
-        
-        for (File file : files) { 
-            
-            // Recursive call to find files inside directories
-            if (file.isDirectory()) {
-                getAllFiles(file);
-            } 
-            // if is a media file, add to the full path as the key, and name to display the ListView
-            else if (isVideoFile(file.toString()) || isAudioFile(file.toString())) {
-                filePlayList.put(file, file.getName());
-            }
-        }        
-    }
-    
-    /**
-     * Updates the progress bar with the media time
-     */
-    private void updateProgressBar() {
-        progressBar.setDisable(false);
-        progressSlider.setDisable(false);
-        
-        // click-drag bar  (abs value to change in both ways)
-        progressSlider.valueProperty().addListener((ov, oldValue, newValue) -> {
-            double currentTime = mediaPlayer.getCurrentTime().toSeconds();
-            
-            if (Math.abs( currentTime - newValue.doubleValue() ) > 0.1) {
-                mediaPlayer.seek( Duration.seconds(newValue.doubleValue()) );
-            }
-        });
-        
-        // update visual progress
-        mediaPlayer.currentTimeProperty().addListener((ObservableValue<? extends Duration> ov, Duration oldValue, Duration newValue) -> {
-            if(!progressSlider.isValueChanging()) {
-                progressSlider.setValue(newValue.toSeconds() );
-            }
-        });
-        
-        mediaPlayer.setOnEndOfMedia(() -> endOfMedia());
-                           
-    }
-     
-    private void showMediaVideo() {
-        smallAlbumArt.setImage(new Image("styles/img/Media-Player-icon.png"));
-        mediaView.setVisible(true);
-        mediaView.setMediaPlayer(mediaPlayer);
-        mediaView.fitHeightProperty().bind(screenBackground.widthProperty());
-        mediaView.fitWidthProperty().bind(screenBackground.heightProperty());
     }
     
     private void initiateMediaPlayer(String path) {
@@ -423,7 +349,8 @@ public class MediaPlayerFXMLController implements Initializable {
         if (path == null) {
                 return;
         }
-        
+
+        Media media;
         try {
             media = new Media(Paths.get(path).toUri().toString());
         } 
@@ -444,10 +371,10 @@ public class MediaPlayerFXMLController implements Initializable {
 
         String fileName = (new File(path)).getName();
 
-        if (isVideoFile(path)) {
+        if (Playlist.isVideoFile(path)) {
             fileNameText.setText(fileName);
             setStageName(fileName);
-            showMediaVideo();
+            Playback.showMediaVideo(mediaView, mediaPlayer, smallAlbumArt, screenBackground);
         } //audio file
         else {
             // set the file names
@@ -456,8 +383,8 @@ public class MediaPlayerFXMLController implements Initializable {
 
             imageView.setVisible(true);
 
-            // if it has metadata it will overwrite the file names, if dont, it will stay the same
-            media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object> ch) -> {
+            // if it has metadata it will overwrite the file names, if not, it will stay the same
+            media.getMetadata().addListener((MapChangeListener.Change<? extends String, ?> ch) -> {
                 if (ch.wasAdded()) {
                     handleMetadata(ch.getKey(), ch.getValueAdded());
 
@@ -469,10 +396,11 @@ public class MediaPlayerFXMLController implements Initializable {
             });
         }
 
-        updateProgressBar();
-        updateTimeText();
-        updateMediaLenght();
-        updateMediaVolume();
+        Playback.updateTimeText(timeText, mediaPlayer);
+        Playback.updateProgressBar(progressBar, progressSlider, mediaPlayer);
+        Playback.updateMediaLength(mediaPlayer, media, progressSlider, totalTimeText);
+        Playback.updateMediaVolume(volumeButton, volumeSlider, mediaPlayer);
+        mediaPlayer.setOnEndOfMedia(this::endOfMedia);
 
         mediaPlayer.play();
     }
@@ -512,101 +440,9 @@ public class MediaPlayerFXMLController implements Initializable {
         }
     }
     
-    private void updateNextPreviousButtonsState() {
-        System.out.println(fileNumber);
-        if (fileNumber >= filePlayList.size() - 1 || filePlayList.isEmpty()) {
-            nextButton.setDisable(true);
-        } else {
-            nextButton.setDisable(false);
-        }
-
-        if (fileNumber <= 0 || filePlayList.isEmpty()) {
-            previousButton.setDisable(true);
-        } 
-        else {
-            previousButton.setDisable(false);
-        }
-    }
-    
-    private static boolean isVideoFile(String path) {
-        String mimeType = URLConnection.guessContentTypeFromName(path);
-        return mimeType != null && mimeType.startsWith("video");
-    }
-    private static boolean isAudioFile(String path) {
-        String mimeType = URLConnection.guessContentTypeFromName(path);
-        return mimeType != null && mimeType.startsWith("audio");
-    }
-   
-    private void updateMediaLenght() {
-        mediaPlayer.setOnReady(() -> {
-            Duration total = media.getDuration();
-            
-            progressSlider.setMax(total.toSeconds());
-            totalTimeText.setText(getTime(total));
-        });
-    }
-    private void updateMediaVolume() {
-        if (!volumeButton.isSelected()) {
-            mediaPlayer.setVolume(volumeSlider.getValue() / 100);
-        }
-        else {
-            mediaPlayer.setVolume(0);
-        }
-                
-        volumeSlider.valueProperty().addListener((Observable o) -> {
-            mediaPlayer.setVolume(volumeSlider.getValue()/100);
-            
-            // if you set the volume to 0, activate the mute button
-            if (mediaPlayer.getVolume() == 0) {
-                volumeButton.setSelected(true);
-            }
-            else {
-                volumeButton.setSelected(false);
-            }
-            
-        });
-    }
-    
-    private void updateTimeText() {
-        timeText.textProperty().bind(Bindings.createStringBinding(() -> {
-            
-            return getTime(mediaPlayer.getCurrentTime());
-            
-        }, mediaPlayer.currentTimeProperty()));
-    }
-    
-    private String getTime(Duration time) {
-        
-        int hours = (int) time.toHours();
-        int minutes = (int) time.toMinutes();
-        int seconds = (int) time.toSeconds();
-        
-        if (seconds > 59)  {
-            seconds %= 60;
-        }
-        
-        if (minutes > 59) {
-            minutes %= 60;
-        }
-        
-        if (hours > 59) {
-            hours %= 60;
-        }
-        
-        if (hours>0) {
-            return String.format("%d:%02d:%02d",
-                    hours, minutes, seconds);
-        }
-
-        
-        return String.format("%02d:%02d",
-                 minutes, seconds);
-    }
-    
-    
     private void endOfMedia() {
         progressSlider.setValue(0);
-        
+
         if (repeatButton.isSelected()){
             return;
         }
@@ -622,12 +458,12 @@ public class MediaPlayerFXMLController implements Initializable {
     }
     
     private void playNextMedia() {
-        
+
         if (previousButton.isDisable()) {
             previousButton.setDisable(false);
         }
 
-        // verify if its the last song
+        // verify if it's the last song
         if (fileNumber >= filePlayList.size() - 2) {
             nextButton.setDisable(true);
         } else {
@@ -648,32 +484,10 @@ public class MediaPlayerFXMLController implements Initializable {
             playList.scrollTo(oldValue);
             fileNumber++;
         }
+
         initiateMediaPlayer(filePlayList.keySet().toArray()[fileNumber].toString());
         playList.getSelectionModel().select(fileNumber);
         playList.getFocusModel().focus(oldValue);
     }
-    
-    
-    public static int findKeyIndex(Map<File, String> map, String searchString) {
-        ArrayList<File> keys = new ArrayList<>(map.keySet());
-        if (searchString == null || searchString.isEmpty()) {
-            return -1;
-        }
-        System.out.println("Keys list size: " + keys.size());
-        for (File key : keys) {
-            System.out.println("Checking key: " + key.toString());
-            System.out.println("Search string: " + searchString);
-            if (key.toString().toLowerCase().contains(searchString.toLowerCase())) {
-                System.out.println("Found match: " + key.toString());
-                return keys.indexOf(key);
-            }
-        }
-        System.out.println("No match found");
-        return -1;
-    }
 
-    
-    private void setStageName(String track) {
-        wmediaplayer.WMediaPlayer.getStage().setTitle(track + " - Media Player 11");
-    }
 }

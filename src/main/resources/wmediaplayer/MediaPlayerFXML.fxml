@@ -23,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="mainScene" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #000000;" styleClass="root" stylesheets="@../styles/MediaPlayerStyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MediaPlayerFXMLController">
+<BorderPane fx:id="mainScene" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #000000;" styleClass="root" stylesheets="@../styles/MediaPlayerStyles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MediaPlayerController">
    <top>
       <HBox alignment="CENTER_LEFT" styleClass="nav-bar" stylesheets="@../styles/MediaPlayerStyles.css" BorderPane.alignment="CENTER">
          <children>
@@ -85,7 +85,7 @@
                         <Insets />
                      </VBox.margin>
                      <children>
-                        <MediaView fx:id="mediaView" fitHeight="1.0" fitWidth="1.0" rotate="90.0">
+                        <MediaView fx:id="mediaView" fitHeight="1.0" fitWidth="1.0">
                            <viewport>
                               <Rectangle2D />
                            </viewport>
@@ -97,7 +97,7 @@
             </VBox>
             <SplitPane dividerPositions="0.35" maxHeight="1.7976931348623157E308" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="split-pane-divider" stylesheets="@../styles/MediaPlayerStyles.css" SplitPane.resizableWithParent="false">
               <items>
-                  <VBox alignment="BOTTOM_CENTER" minWidth="0.0" style="-fx-background-color: #F3F0FA;" SplitPane.resizableWithParent="false">
+                  <VBox alignment="BOTTOM_CENTER" minWidth="150.0" style="-fx-background-color: #F3F0FA;" SplitPane.resizableWithParent="false">
                      <children>
                         <HBox fx:id="smallAlbumArtBackground" alignment="CENTER" minHeight="0.0" minWidth="0.0" styleClass="root" stylesheets="@../styles/MediaPlayerStyles.css" VBox.vgrow="SOMETIMES">
                            <VBox.margin>
